@@ -131,6 +131,8 @@ async function run() {
         const result =await roomCollection.find().sort({ceatedAt: -1}).limit(8).toArray();
         res.send(result)
     })
+
+    //booking api 
   
     app.get('/booking/:userId', async(req,res)=>{
       const {userId} =req.params;
