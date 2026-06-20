@@ -59,12 +59,12 @@ async function run() {
     const roomCollection = db.collection('rooms')
     const bookingCollection = db.collection('bookings')
 
-
+    // Room API
     app.get('/room', async (req,res)=>{
       const result = await roomCollection.find().toArray();
       res.json(result)
     })
-
+    // middleware
      app.post('/room',verifyToken, async(req,res)=>{
       //const roomData = req.body;
       console.log(req.user)
@@ -78,42 +78,8 @@ async function run() {
       const result = await roomCollection.insertOne(roomData);
       res.json(result)
   })
-
-    app.get('/featured', async(req,res)=>{
-        const result =await roomCollection.find().sort({ceatedAt: -1}).limit(8).toArray();
-        res.send(result)
-    })
+   
   
-    app.get('/booking/:userId', async(req,res)=>{
-      const {userId} =req.params;
-      const result = await bookingCollection.find({userId:userId}).toArray();
-      res.json(result)
-    })
-
-    app.post('/booking',verifyToken, async(req,res)=>{
-      const bookingData = req.body;
-      const result = await bookingCollection.insertOne(bookingData);
-     const updateCount= await roomCollection.updateOne({
-     
-	      _id: new ObjectId (bookingData.roomId),
-        },
-        {$inc :{bookingCount : 1,},}
-        ) ;
-       console.log("updatecount", updateCount)
-      res.json(result)
-    })
-
-  
-    
-    //middelware
-   app.get('/room/:id', verifyToken,async(req,res)=>{
-    const {id} = req.params ;
-    const result = await roomCollection.findOne({
-      _id : new ObjectId(id)
-    })
-    res.json(result)
-
-   })
    app.patch('/room/:id',verifyToken, async(req,res)=>{
     const {id} = req.params;
     const updateData = req.body;
@@ -154,6 +120,33 @@ async function run() {
     })
     res.json(result)
    })
+    app.get('/featured', async(req,res)=>{
+        const result =await roomCollection.find().sort({ceatedAt: -1}).limit(8).toArray();
+        res.send(result)
+    })
+  
+    app.get('/booking/:userId', async(req,res)=>{
+      const {userId} =req.params;
+      const result = await bookingCollection.find({userId:userId}).toArray();
+      res.json(result)
+    })
+
+    app.post('/booking',verifyToken, async(req,res)=>{
+      const bookingData = req.body;
+      const result = await bookingCollection.insertOne(bookingData);
+     const updateCount= await roomCollection.updateOne({
+     
+	      _id: new ObjectId (bookingData.roomId),
+        },
+        {$inc :{bookingCount : 1,},}
+        ) ;
+       console.log("updatecount", updateCount)
+      res.json(result)
+    })
+
+  
+    
+   
 
    app.delete('/booking/:bookingId',verifyToken, async(req,res)=>{
     const {bookingId} = req.params;
