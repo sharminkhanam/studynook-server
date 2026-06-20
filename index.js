@@ -65,11 +65,7 @@ async function run() {
       res.json(result)
     })
 
-    app.get('/featured', async(req,res)=>{
-        const result =await roomCollection.find().sort({ceatedAt: -1}).limit(8).toArray();
-        res.send(result)
-    })
-    app.post('/room',verifyToken, async(req,res)=>{
+     app.post('/room',verifyToken, async(req,res)=>{
       //const roomData = req.body;
       console.log(req.user)
       const roomData = {
@@ -82,6 +78,12 @@ async function run() {
       const result = await roomCollection.insertOne(roomData);
       res.json(result)
   })
+
+    app.get('/featured', async(req,res)=>{
+        const result =await roomCollection.find().sort({ceatedAt: -1}).limit(8).toArray();
+        res.send(result)
+    })
+  
     app.get('/booking/:userId', async(req,res)=>{
       const {userId} =req.params;
       const result = await bookingCollection.find({userId:userId}).toArray();
