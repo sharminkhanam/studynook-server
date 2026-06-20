@@ -185,7 +185,13 @@ async function run() {
     res.json(result)
    })
 
-   
+   app.get('/my-listings',verifyToken, async (req,res)=>{
+    console.log( req.user);
+    const result = await roomCollection.find({
+      ownerId : req.user.id
+    }).toArray();
+    res.json(result)
+   })
 
   
     await client.db("admin").command({ ping: 1 });
