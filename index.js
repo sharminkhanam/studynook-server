@@ -78,28 +78,16 @@ async function run() {
       const result = await roomCollection.insertOne(roomData);
       res.json(result)
   })
-   
-  
-   app.patch('/room/:id',verifyToken, async(req,res)=>{
-    const {id} = req.params;
-    const updateData = req.body;
-    const room = await roomCollection.findOne({
+    app.get('/room/:id', verifyToken,async(req,res)=>{
+    const {id} = req.params ;
+    const result = await roomCollection.findOne({
       _id : new ObjectId(id)
     })
-    if(!room){
-      return res.status(404).json({message: "Room not found"})
-    }
-    if(room.ownerId !== req.user.id){
-    return res.status(404).json({mesage:"You are not authorized to update this room"})
-  }
-    delete updateData.ownerId;
-
-    const result = await roomCollection.updateOne({
-      _id : new ObjectId(id)
-    },{$set:updateData})
     res.json(result)
 
    })
+  
+  
 
    app.delete('/room/:id', verifyToken, async(req,res)=>{
     const {id} = req.params;
