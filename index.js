@@ -166,23 +166,7 @@ async function run() {
 
    })
 
-   app.get('/my-bookings',verifyToken, async (req,res)=>{
-    console.log( req.user);
-    const result = await bookingCollection.find({
-      userId : req.user.id
-    }).toArray();
-    res.json(result)
-   })
-
-   app.get('/my-listings',verifyToken, async (req,res)=>{
-    console.log( req.user);
-    const result = await roomCollection.find({
-      ownerId : req.user.id
-    }).toArray();
-    res.json(result)
-   })
-
-   app.patch('/booking/:bookingId/cancel',verifyToken, async(req,res)=>{
+    app.patch('/booking/:bookingId/cancel',verifyToken, async(req,res)=>{
     const {bookingId} = req.params;
     const result = await bookingCollection.updateOne({
       _id: new ObjectId(bookingId)
@@ -192,6 +176,18 @@ async function run() {
     res.json(result)
 
    })
+
+    app.get('/my-bookings',verifyToken, async (req,res)=>{
+    console.log( req.user);
+    const result = await bookingCollection.find({
+      userId : req.user.id
+    }).toArray();
+    res.json(result)
+   })
+
+   
+
+  
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
