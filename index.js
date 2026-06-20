@@ -4,19 +4,15 @@ const dotenv = require('dotenv')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 dotenv.config()
 const { createRemoteJWKSet, jwtVerify } = require('jose-cjs');
-
-
-
 const app = express()
 const port = process.env.PORT || 5000;
-
 const uri=process.env.MONGODB_URI;
 
 app.use(express.json())
 app.use(cors())
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello Backend server!')
 })
 //studybookdb2
 //e6hObnP3IonZn7vs
@@ -69,10 +65,7 @@ async function run() {
       res.json(result)
     })
 
-    app.get('/featured', async(req,res)=>{
-        const result =await roomCollection.find().sort({ceatedAt: -1}).limit(8).toArray();
-        res.send(result)
-    })
+    
     app.post('/room',verifyToken, async(req,res)=>{
       //const roomData = req.body;
       console.log(req.user)
