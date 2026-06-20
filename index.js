@@ -108,7 +108,11 @@ async function run() {
 
    })
 
-  
+   app.delete('/room/:id', verifyToken, async(req,res)=>{
+    const {id} = req.params;
+      const room = await roomCollection.findOne({
+    _id: new ObjectId(id),
+  });
 
   if (!room) {
     return res.status(404).json({
