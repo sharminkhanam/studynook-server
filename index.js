@@ -71,6 +71,8 @@ async function run() {
       const roomData = {
         ...req.body,
         ownerId : req.user.id,
+        ownerName : req.user.name,
+        ownerEmail :req.user.email,
         bookingCount:0,
         createdAt : new Date()
       }
@@ -94,10 +96,10 @@ async function run() {
       _id : new ObjectId(id)
     })
     if(!room){
-      return res.status(404).json({message: "Room not found"})
+      return res.status(403).json({message: "Room not found"})
     }
     if(room.ownerId !== req.user.id){
-    return res.status(404).json({mesage:"You are not authorized to update this room"})
+    return res.status(403).json({mesage:"You are not authorized to update this room"})
   }
     delete updateData.ownerId;
 
@@ -115,12 +117,12 @@ async function run() {
   });
 
   if (!room) {
-    return res.status(404).json({
+    return res.status(403).json({
       message: "Room not found",
     });
   }
   if(room.ownerId !== req.user.id){
-    return res.status(404).json({mesage:"You are not authorized to delete this room"})
+    return res.status(403).json({mesage:"You are not authorized to delete this room"})
   }
     const result = await roomCollection.deleteOne({
       _id: new ObjectId(id)
@@ -149,13 +151,9 @@ async function run() {
         },
         {$inc :{bookingCount : 1,},}
         ) ;
-       console.log("updatecount", updateCount)
+       //console.log("updatecount", updateCount)
       res.json(result)
     })
-
-  
-    
-   
 
    app.delete('/booking/:bookingId',verifyToken, async(req,res)=>{
     const {bookingId} = req.params;
